@@ -1,0 +1,70 @@
+.product-list-wrapper {
+  border: 3px solid #4a90e2; /* soft blue border */
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f9fbfe; /* very light blue/gray background */
+  max-width: 900px;
+  margin: 30px auto;
+  box-sizing: border-box;
+  box-shadow: 0 6px 18px rgba(74, 144, 226, 0.2); /* subtle blue shadow */
+  display: block;
+}
+
+table {
+  background-color: #ffffff; /* pure white */
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px; /* vertical spacing between rows */
+  box-sizing: border-box;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+th.mat-header-cell, td.mat-cell {
+  padding: 14px 18px;
+  font-size: 15px;
+  color: #374151; /* dark slate gray */
+  border-bottom: none; /* remove default border */
+}
+
+th.mat-header-cell {
+  font-weight: 700;
+  background-color: #e3f2fd; /* very light blue header background */
+  color: #1e40af; /* navy blue */
+  text-align: left;
+  user-select: none;
+}
+
+tr.mat-row {
+  background-color: #fefefe;
+  transition: background-color 0.25s ease;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+tr.mat-row:hover {
+  background-color: #e3f2fd; /* light blue hover */
+  cursor: pointer;
+}
+
+button.mat-icon-button {
+  margin-right: 12px;
+  color: #1e40af; /* navy blue icons */
+  transition: color 0.3s ease;
+}
+
+button.mat-icon-button:hover {
+  color: #2563eb; /* brighter blue on hover */
+}
+
+.loading-container, .error-message {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.error-message {
+  color: #dc2626; /* warm red for errors */
+}

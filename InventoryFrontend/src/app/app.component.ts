@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { ProductListComponent } from './components/product-list/product-list.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ProductListComponent],
-  template: `<app-product-list></app-product-list>`,
-  styleUrl: './app.component.css'
+  imports: [RouterModule],
+  template: `<router-outlet></router-outlet>`,
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'InventoryFrontend';
