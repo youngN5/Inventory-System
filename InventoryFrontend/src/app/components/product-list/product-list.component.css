@@ -1,20 +1,20 @@
 .product-list-wrapper {
-  border: 3px solid #4a90e2; /* soft blue border */
+  border: 3px solid #4a90e2; 
   padding: 20px;
   border-radius: 10px;
-  background-color: #f9fbfe; /* very light blue/gray background */
+  background-color: #f9fbfe; 
   max-width: 900px;
   margin: 30px auto;
   box-sizing: border-box;
-  box-shadow: 0 6px 18px rgba(74, 144, 226, 0.2); /* subtle blue shadow */
+  box-shadow: 0 6px 18px rgba(74, 144, 226, 0.2); 
   display: block;
 }
 
 table {
-  background-color: #ffffff; /* pure white */
+  background-color: #ffffff; 
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px; /* vertical spacing between rows */
+  border-spacing: 0 8px;
   box-sizing: border-box;
   border-radius: 8px;
   overflow: hidden;
@@ -24,14 +24,14 @@ table {
 th.mat-header-cell, td.mat-cell {
   padding: 14px 18px;
   font-size: 15px;
-  color: #374151; /* dark slate gray */
-  border-bottom: none; /* remove default border */
+  color: #374151; 
+  border-bottom: none; 
 }
 
 th.mat-header-cell {
   font-weight: 700;
-  background-color: #e3f2fd; /* very light blue header background */
-  color: #1e40af; /* navy blue */
+  background-color: #e3f2fd; 
+  color: #1e40af; 
   text-align: left;
   user-select: none;
 }
@@ -44,18 +44,18 @@ tr.mat-row {
 }
 
 tr.mat-row:hover {
-  background-color: #e3f2fd; /* light blue hover */
+  background-color: #e3f2fd; 
   cursor: pointer;
 }
 
 button.mat-icon-button {
   margin-right: 12px;
-  color: #1e40af; /* navy blue icons */
+  color: #1e40af; 
   transition: color 0.3s ease;
 }
 
 button.mat-icon-button:hover {
-  color: #2563eb; /* brighter blue on hover */
+  color: #2563eb; 
 }
 
 .loading-container, .error-message {
@@ -66,5 +66,5 @@ button.mat-icon-button:hover {
 }
 
 .error-message {
-  color: #dc2626; /* warm red for errors */
+  color: #dc2626;
 }
