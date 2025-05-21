@@ -14,6 +14,18 @@
       Add Product
     </button>
   </div>
+<div class="product-list-search" style="display:flex; align-items:center;">
+  <mat-form-field appearance="fill" style="flex: 1;">
+    <mat-label>Search by Name</mat-label>
+    <input matInput [(ngModel)]="searchName" (ngModelChange)="onSearchChange()" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="flex: 1;">
+    <mat-label>Search by Category</mat-label>
+    <input matInput [(ngModel)]="searchCategory" (ngModelChange)="onSearchChange()" />
+  </mat-form-field>
+</div>
+
 
 <table mat-table [dataSource]="products" class="mat-elevation-z8" 
       *ngIf="!loading && products && products.length > 0" aria-label="Products Table">

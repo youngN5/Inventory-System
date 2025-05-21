@@ -36,7 +36,7 @@ export class ProductService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  search(name?: string, category?: string): Observable<Product[]> {
+  searchProducts(name?: string, category?: string): Observable<Product[]> {
     let params = new HttpParams();
     if (name) {
       params = params.set('name', name);

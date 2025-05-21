@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
@@ -6,7 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-
+import { debounceTime, Subject } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
@@ -23,7 +26,10 @@ import { ProductDetailsDialogComponent } from '../../shared/product-details-dial
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
@@ -34,7 +40,11 @@ export class ProductListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'price', 'quantityInStock', 'category', 'actions'];
 
   loading = false;
-  errorMessage = '';
+  errorMessage = '';  
+  searchName: string = '';
+  searchCategory: string = '';
+
+  private searchSubject = new Subject<void>();
 
   constructor(
     private productService: ProductService,
@@ -44,22 +54,38 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProducts();
-  }
-
-  loadProducts() {
-    this.loading = true;
-    this.errorMessage = '';
-    this.productService.getAll().subscribe({
-      next: (data) => {
-        this.products = data;
-        this.loading = false;
-      },
-      error: () => {
-        this.errorMessage = 'Failed to load products.';
-        this.loading = false;
-      }
+        this.searchSubject.pipe(
+      debounceTime(300)
+    ).subscribe(() => {
+      this.loadProducts();
     });
   }
+
+loadProducts() {
+  this.loading = true;
+  this.errorMessage = '';
+
+  this.productService.searchProducts(this.searchName, this.searchCategory).subscribe({
+    next: (data: Product[]) => {
+        this.products = data;
+      this.loading = false;
+    },
+      error: () => {
+      this.errorMessage = 'Failed to load products.';
+      this.loading = false;
+    }
+  });
+}
+  onSearchChange() {
+    this.searchSubject.next();
+  }
+
+  clearSearch() {
+    this.searchName = '';
+    this.searchCategory = '';
+    this.loadProducts();
+  }
+
 
   editProduct(id?: number) {
     if (id != null) {

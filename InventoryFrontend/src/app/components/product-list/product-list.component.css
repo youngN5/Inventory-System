@@ -68,3 +68,14 @@ button.mat-icon-button:hover {
 .error-message {
   color: #dc2626;
 }
+.product-list-search mat-form-field {
+  width: 200px;            
+  margin-right: 12px;      
+  font-size: 14px;      
+}
+
+.product-list-search input.mat-input-element {
+  height: 22px;            
+  font-size: 14px;
+  padding: 4px 8px;      
+}
