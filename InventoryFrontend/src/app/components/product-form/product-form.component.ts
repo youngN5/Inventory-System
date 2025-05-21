@@ -1,33 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { ProductService } from '../../services/product.service';
+import { Product } from '../../models/product.model';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-
-import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/product.model';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-product-form',
+  templateUrl: './product-form.component.html',
+  styleUrls: ['./product-form.component.css'],
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
-  ],
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.css']
+    MatButtonModule,
+    MatIconModule
+  ]
 })
 export class ProductFormComponent implements OnInit {
   productForm!: FormGroup;
   isEditMode = false;
   productId?: number;
-
   loading = false;
   errorMessage = '';
 
@@ -52,46 +52,62 @@ export class ProductFormComponent implements OnInit {
       if (id) {
         this.isEditMode = true;
         this.productId = +id;
-        this.loading = true;
-        this.productService.getById(this.productId).subscribe({
-          next: (product: Product) => {
-            this.productForm.patchValue(product);
-            this.loading = false;
-          },
-          error: () => {
-            this.errorMessage = 'Failed to load product.';
-            this.loading = false;
-          }
-        });
+        this.loadProduct(this.productId);
+      } else {
+        this.isEditMode = false;
       }
     });
   }
 
-onSubmit(): void {
-  if (this.productForm.invalid) return;
-
-  this.loading = true;
-  this.errorMessage = '';
-
-  const productData = this.productForm.value;
-
-  if (this.isEditMode && this.productId != null) {
-    productData.id = this.productId;  
+  loadProduct(id: number): void {
+    this.loading = true;
+    this.productService.getById(id).subscribe({
+      next: (product: Product) => {
+        this.productForm.patchValue(product);
+        this.loading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Failed to load product.';
+        this.loading = false;
+      }
+    });
   }
 
-  const request = this.isEditMode && this.productId != null
-    ? this.productService.update(this.productId, productData)
-    : this.productService.create(productData);
-
-  request.subscribe({
-    next: () => {
-      this.loading = false;
-      this.router.navigate(['/products']);
-    },
-    error: () => {
-      this.errorMessage = 'Failed to save product.';
-      this.loading = false;
+  onSubmit(): void {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
     }
-  });
-}
+
+    this.loading = true;
+    const productData: Product = this.productForm.value;
+
+    if (this.isEditMode && this.productId != null) {
+      this.productService.update(this.productId, productData).subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigate(['/products']);
+        },
+        error: () => {
+          this.errorMessage = 'Failed to update product.';
+          this.loading = false;
+        }
+      });
+    } else {
+      this.productService.create(productData).subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigate(['/products']);
+        },
+        error: () => {
+          this.errorMessage = 'Failed to create product.';
+          this.loading = false;
+        }
+      });
+    }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/products']);
+  }
 }

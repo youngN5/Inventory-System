@@ -1,41 +1,54 @@
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Name</mat-label>
-    <input matInput formControlName="name" />
-    <mat-error *ngIf="productForm.get('name')?.hasError('required')">
-      Name is required
-    </mat-error>
-  </mat-form-field>
+<div class="product-form-wrapper">
+  <h2 class="form-title">{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Description</mat-label>
-    <input matInput formControlName="description" />
-  </mat-form-field>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required type="text" />
+      <mat-error *ngIf="productForm.controls['name'].hasError('required') && productForm.controls['name'].touched">
+        Name is required
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Price</mat-label>
-    <input matInput type="number" formControlName="price" />
-    <mat-error *ngIf="productForm.get('price')?.hasError('required')">
-      Price is required
-    </mat-error>
-    <mat-error *ngIf="productForm.get('price')?.hasError('min')">
-      Price must be greater than zero
-    </mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Quantity In Stock</mat-label>
-    <input matInput type="number" formControlName="quantityInStock" />
-    <mat-error *ngIf="productForm.get('quantityInStock')?.hasError('required')">
-      Quantity is required
-    </mat-error>
-    <mat-error *ngIf="productForm.get('quantityInStock')?.hasError('min')">
-      Quantity can't be negative
-    </mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" required min="0" />
+      <mat-error *ngIf="productForm.controls['price'].hasError('required') && productForm.controls['price'].touched">
+        Price is required
+      </mat-error>
+      <mat-error *ngIf="productForm.controls['price'].hasError('min') && productForm.controls['price'].touched">
+        Price cannot be negative
+      </mat-error>
+    </mat-form-field>
 
-  <button type="submit" [disabled]="loading || productForm.invalid">Submit</button>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Quantity in Stock</mat-label>
+      <input matInput type="number" formControlName="quantityInStock" required min="0" />
+      <mat-error *ngIf="productForm.controls['quantityInStock'].hasError('required') && productForm.controls['quantityInStock'].touched">
+        Quantity is required
+      </mat-error>
+      <mat-error *ngIf="productForm.controls['quantityInStock'].hasError('min') && productForm.controls['quantityInStock'].touched">
+        Quantity cannot be negative
+      </mat-error>
+    </mat-form-field>
 
-  <div *ngIf="loading">Loading...</div>
-  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-</form>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Category</mat-label>
+      <input matInput formControlName="category" type="text" />
+    </mat-form-field>
+
+    <div class="form-buttons">
+      <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid">
+        {{ isEditMode ? 'Update' : 'Add' }}
+      </button>
+      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    </div>
+
+    <p *ngIf="errorMessage" style="color: red; margin-top: 10px;">{{ errorMessage }}</p>
+  </form>
+</div>

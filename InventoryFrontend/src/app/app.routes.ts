@@ -21,7 +21,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'products/new',
+    path: 'products/add',
     loadComponent: () =>
       import('./components/product-form/product-form.component').then(
         (m) => m.ProductFormComponent

@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-product-list',
@@ -15,9 +17,11 @@ import { Product } from '../../models/product.model';
   imports: [
     CommonModule,
     MatTableModule,
+    RouterModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
@@ -30,7 +34,11 @@ export class ProductListComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -58,11 +66,20 @@ export class ProductListComponent implements OnInit {
   }
 
   deleteProduct(id?: number) {
-    if (id != null && confirm('Are you sure you want to delete this product?')) {
-      this.productService.delete(id).subscribe({
-        next: () => this.loadProducts(),
-        error: () => alert('Failed to delete product.')
-      });
-    }
+    if (id == null) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: { message: 'Are you sure you want to delete this product?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.productService.delete(id).subscribe({
+          next: () => this.loadProducts(),
+          error: () => alert('Failed to delete product.')
+        });
+      }
+    });
   }
 }
