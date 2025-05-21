@@ -1,5 +1,4 @@
 <div class="product-list-wrapper" style="padding: 10px; display: block;">
-
   <div *ngIf="loading" class="loading-container" style="text-align:center; padding:20px;">
     <mat-progress-spinner mode="indeterminate" aria-label="Loading products"></mat-progress-spinner>
     <p>Loading products, please wait...</p>
@@ -14,30 +13,26 @@
       Add Product
     </button>
   </div>
-<div class="product-list-search" style="display:flex; align-items:center;">
-  <mat-form-field appearance="fill" style="flex: 1;">
-    <mat-label>Search by Name</mat-label>
-    <input matInput [(ngModel)]="searchName" (ngModelChange)="onSearchChange()" />
-  </mat-form-field>
 
-  <mat-form-field appearance="fill" style="flex: 1;">
-    <mat-label>Search by Category</mat-label>
-    <input matInput [(ngModel)]="searchCategory" (ngModelChange)="onSearchChange()" />
-  </mat-form-field>
-</div>
+  <div class="product-list-search" style="display:flex; align-items:center;">
+    <mat-form-field appearance="fill" style="flex: 1;">
+      <mat-label>Search by Name</mat-label>
+      <input matInput [(ngModel)]="searchName" (ngModelChange)="onSearchChange()" />
+    </mat-form-field>
 
+    <mat-form-field appearance="fill" style="flex: 1;">
+      <mat-label>Search by Category</mat-label>
+      <input matInput [(ngModel)]="searchCategory" (ngModelChange)="onSearchChange()" />
+    </mat-form-field>
+  </div>
 
-<table mat-table [dataSource]="products" class="mat-elevation-z8" 
-      *ngIf="!loading && products && products.length > 0" aria-label="Products Table">
+  <table mat-table [dataSource]="products" class="mat-elevation-z8"
+         *ngIf="!loading && products && products.length > 0" aria-label="Products Table">
+
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
       <td mat-cell *matCellDef="let product">{{ product.name }}</td>
     </ng-container>
-<!-- 
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef>Description</th>
-      <td mat-cell *matCellDef="let product">{{ product.description }}</td>
-    </ng-container> -->
 
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef>Price</th>
@@ -76,5 +71,4 @@
   <div *ngIf="!loading && (!products || products.length === 0)" style="text-align:center; padding: 20px;">
     No products found.
   </div>
-
 </div>

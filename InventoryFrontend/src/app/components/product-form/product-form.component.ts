@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-product-form',
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
+    MatTableModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule
@@ -83,7 +85,11 @@ export class ProductFormComponent implements OnInit {
     const productData: Product = this.productForm.value;
 
     if (this.isEditMode && this.productId != null) {
-      this.productService.update(this.productId, productData).subscribe({
+        const updatedProduct: Product = {
+        ...productData,
+        id: this.productId  
+      };
+      this.productService.update(this.productId, updatedProduct).subscribe({
         next: () => {
           this.loading = false;
           this.router.navigate(['/products']);
