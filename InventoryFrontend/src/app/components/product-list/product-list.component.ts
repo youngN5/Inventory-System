@@ -10,6 +10,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { ProductDetailsDialogComponent } from '../../shared/product-details-dialog/product-details-dialog.component';
+
 
 @Component({
   selector: 'app-product-list',
@@ -29,7 +31,7 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
-  displayedColumns: string[] = ['name', 'description', 'price', 'quantityInStock', 'category', 'actions'];
+  displayedColumns: string[] = ['name', 'price', 'quantityInStock', 'category', 'actions'];
 
   loading = false;
   errorMessage = '';
@@ -82,4 +84,13 @@ export class ProductListComponent implements OnInit {
       }
     });
   }
+  viewDetails(product: Product) {
+  this.dialog.open(ProductDetailsDialogComponent, {
+    width: '400px',
+    data: {
+      name: product.name,
+      description: product.description
+    }
+  });
+}
 }
