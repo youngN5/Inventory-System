@@ -21,9 +21,10 @@ namespace InventoryApi.Controllers
 
         // GET /products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
+        public async Task<ActionResult<PagedResult<Product>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             var query = _context.Products.AsQueryable();
+            int totalCount = await query.CountAsync();
 
             if (pageNumber.HasValue && pageSize.HasValue)
             {
@@ -33,7 +34,11 @@ namespace InventoryApi.Controllers
             }
 
             var products = await query.ToListAsync();
-            return Ok(products);
+            return Ok(new PagedResult<Product>
+            {
+                TotalCount = totalCount,
+                Items = products
+            });
         }
 
         // GET /products/{id}
@@ -98,7 +103,11 @@ namespace InventoryApi.Controllers
         }
         //SEARCH by name and category
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<Product>>> SearchProducts(string? name, string? category)
+        public async Task<ActionResult<PagedResult<Product>>> SearchProducts(
+            string? name, 
+            string? category,
+            [FromQuery] int? pageNumber,
+            [FromQuery] int? pageSize)
         {
             var query = _context.Products.AsQueryable();
 
@@ -108,7 +117,19 @@ namespace InventoryApi.Controllers
             if (!string.IsNullOrEmpty(category))
                 query = query.Where(p => p.Category != null && p.Category.Contains(category));
 
-            return await query.ToListAsync();
+            int totalCount = await query.CountAsync();
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                query = query
+                    .Skip((pageNumber.Value - 1) * pageSize.Value)
+                    .Take(pageSize.Value);
+            }
+            var products = await query.ToListAsync();
+            return Ok(new PagedResult<Product>
+            {
+                TotalCount = totalCount,
+                Items = products
+            });
         }
     }
 }

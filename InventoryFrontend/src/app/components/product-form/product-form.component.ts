@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-product-form',
@@ -23,7 +24,8 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule
   ]
 })
 export class ProductFormComponent implements OnInit {
@@ -37,15 +39,16 @@ export class ProductFormComponent implements OnInit {
     private fb: FormBuilder,
     private productService: ProductService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      price: [0, [Validators.required, Validators.min(0)]],
-      quantityInStock: [0, [Validators.required, Validators.min(0)]],
+      price: [0, [Validators.required, Validators.min(1)]],
+      quantityInStock: [0, [Validators.required, Validators.min(1)]],
       category: ['']
     });
 
@@ -92,6 +95,7 @@ export class ProductFormComponent implements OnInit {
       this.productService.update(this.productId, updatedProduct).subscribe({
         next: () => {
           this.loading = false;
+          this.showNotification('Product updated successfully!');
           this.router.navigate(['/products']);
         },
         error: () => {
@@ -103,6 +107,7 @@ export class ProductFormComponent implements OnInit {
       this.productService.create(productData).subscribe({
         next: () => {
           this.loading = false;
+          this.showNotification('Product created successfully!');
           this.router.navigate(['/products']);
         },
         error: () => {
@@ -115,5 +120,12 @@ export class ProductFormComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/products']);
+  }
+  showNotification(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center', 
+      verticalPosition: 'top'
+    });
   }
 }

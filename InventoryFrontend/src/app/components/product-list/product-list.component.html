@@ -13,21 +13,28 @@
       Add Product
     </button>
   </div>
+  <h1 class="inventory-heading">Inventory System</h1>
 
   <div class="product-list-search" style="display:flex; align-items:center;">
     <mat-form-field appearance="fill" style="flex: 1;">
       <mat-label>Search by Name</mat-label>
       <input matInput [(ngModel)]="searchName" (ngModelChange)="onSearchChange()" />
+      <button *ngIf="searchName" matSuffix mat-icon-button aria-label="Clear" (click)="clearNameSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
     </mat-form-field>
 
     <mat-form-field appearance="fill" style="flex: 1;">
       <mat-label>Search by Category</mat-label>
       <input matInput [(ngModel)]="searchCategory" (ngModelChange)="onSearchChange()" />
+      <button *ngIf="searchCategory" matSuffix mat-icon-button aria-label="Clear" (click)="clearCategorySearch()">
+        <mat-icon>close</mat-icon>
+      </button>
     </mat-form-field>
   </div>
 
-  <table mat-table [dataSource]="products" class="mat-elevation-z8"
-         *ngIf="!loading && products && products.length > 0" aria-label="Products Table">
+  <table mat-table [dataSource]="products" class="mat-elevation-z8" *ngIf="!loading && products && products.length > 0"
+    aria-label="Products Table">
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -67,6 +74,15 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns; trackBy: trackByProductId"></tr>
   </table>
+  <div class="pagination" style="display: flex; justify-content: center; align-items: center; margin-top: 10px;">
+    <button mat-button (click)="goToFirstPage()" [disabled]="pageNumber === 1">First</button>
+    <button mat-button (click)="prevPage()" [disabled]="pageNumber === 1">Previous</button>
+
+    <span style="margin: 0 10px;">Page {{ pageNumber }} of {{ totalPages() }} </span>
+
+    <button mat-button (click)="nextPage()" [disabled]="pageNumber === totalPages()">Next</button>
+    <button mat-button (click)="goToLastPage()" [disabled]="pageNumber === totalPages()">Last</button>
+  </div>
 
   <div *ngIf="!loading && (!products || products.length === 0)" style="text-align:center; padding: 20px;">
     No products found.

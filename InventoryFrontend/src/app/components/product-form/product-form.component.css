@@ -27,3 +27,7 @@ mat-form-field {
   gap: 16px;
   margin-top: 20px;
 }
+
+body{
+  background-color: rgb(93, 100, 187);
+}
