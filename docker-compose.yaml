@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_server_inventory
+    environment:
+      SA_PASSWORD: "MyStrong!P@ssw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-U", "sa", "-P", "MyStrong!P@ssw0rd", "-Q", "SELECT 1"]
+      interval: 10s
+      retries: 5
+
+  api:
+    build:
+      context: ./InventoryApi
+      dockerfile: Dockerfile
+    container_name: inventory_api
+    ports:
+      - "5000:80"
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=db;Database=ProductInventoryDb;User Id=sa;Password=YourStrong!Passw0rd;"
+      DOTNET_RUNNING_IN_CONTAINER: true
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./InventoryFrontend
+      dockerfile: Dockerfile
+    container_name: inventory_frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
+volumes:
+  mssql_data:
