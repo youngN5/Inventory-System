@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? 
-    "Server=db;Database=ProductInventoryDb;User Id=sa;Password=Password123!;"));
+    "Server=db;Database=ProductInventoryDb;User Id=sa;Password=Password123!;TrustServerCertificate=True;"));
 
 
 
